@@ -22,24 +22,24 @@ router.get("/", async (req, res) => {
 });
 
 // get one product
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     // find all products
     const singleProductData = await Product.findAll({
-      include: [{model: Category}, {model: Tag}],
-      where: {id: req.params.id},
+      include: [{ model: Category }, { model: Tag }],
+      where: { id: req.params.id },
       attributes: ["id", "product_name", "price", "stock", "category_id"],
     });
 
-    const singleProduct = singleProductData.map((data) => data.get({ plain: true }));
+    const singleProduct = singleProductData.map((data) =>
+      data.get({ plain: true })
+    );
 
     res.status(200).json(singleProduct);
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
   }
-  // find a single product by its `id`
-  // be sure to include its associated Category and Tag data
 });
 
 // create new product
