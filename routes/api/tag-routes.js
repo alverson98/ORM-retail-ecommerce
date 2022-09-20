@@ -45,12 +45,25 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
+  // update a tag's name by its `id` value
   try {
+    //finding matching note first
+    const oldTag = await Tag.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    //updating tag
+    oldTag.update({
+      tag_name: req.body.tag_name,
+    });
+
+    res.send(oldTag);
   } catch (err) {
     console.log(err);
   }
-  // update a tag's name by its `id` value
 });
 
 router.delete("/:id", (req, res) => {
