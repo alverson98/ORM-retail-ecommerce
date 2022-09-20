@@ -32,12 +32,17 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
+  // create a new tag
+  // note: tag table only has id & tag_name
   try {
+    const newTag = await Tag.create({
+      tag_name: req.body.tag_name,
+    });
+    res.json(newTag);
   } catch (err) {
     console.log(err);
   }
-  // create a new tag
 });
 
 router.put("/:id", (req, res) => {
