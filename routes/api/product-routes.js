@@ -7,7 +7,7 @@ const { Product, Category, Tag, ProductTag } = require("../../models");
 router.get("/", async (req, res) => {
   try {
     // find all products
-    const productData = await Product.findByPk({
+    const productData = await Product.findAll({
       include: [{ model: Category }, { model: Tag }],
       attributes: ["id", "product_name", "price", "stock", "category_id"],
     });
@@ -116,8 +116,21 @@ router.put("/:id", (req, res) => {
     });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   // delete one product by its `id` value
+  try {
+    const deleteProduct = await Product.destroy({
+      where: { id: req.params.id },
+    });
+
+    if (!deleteProduct) {
+      res.json("Product could not be deleted.");
+    } else {
+      res.json(deleteProduct);
+    }
+  } catch (err) {
+    res.json(err);
+  }
 });
 
 module.exports = router;
